@@ -1,14 +1,10 @@
 <template>
   <v-app>
     <v-main>
-      <BlogPosts/>
+      <router-view/>
     </v-main>
   </v-app>
 </template>
 
 <script setup>
-import BlogPosts from "@/components/BlogPosts.vue";
 </script>
-
-<style scoped>
-</style>

@@ -7,6 +7,8 @@
               :src="featuredBlog[0]?.imageUrls[0]"
               alt="featured Blog"
               class="featured-image"
+              @click="routeToBlogDetails"
+              style="cursor: pointer"
           />
         </v-col>
         <v-col
@@ -36,6 +38,8 @@
                 :src="blog.imageUrls[0]"
                 alt="image"
                 class="blog-image"
+                @click="routeToBlogDetails"
+                style="cursor: pointer"
             />
             <h2>{{ blog.title }}</h2>
             <p>{{ formatDate(blog.createdAt) }}</p>
@@ -49,10 +53,13 @@
 <script setup>
 import {getBlogposts} from "@/services/blogpostService.js";
 import {onMounted, ref} from "vue";
+import {useRouter} from 'vue-router';
+
 
 const blogposts = ref([]);
 const allBlogs = ref([])
 const featuredBlog = ref([])
+const router = useRouter()
 
 onMounted(async () => {
   try {
@@ -60,9 +67,8 @@ onMounted(async () => {
     blogposts.value = response.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     allBlogs.value = blogposts.value.slice(1)
     featuredBlog.value = [blogposts.value[0]]
-    console.log("blogposts", blogposts.value);
   } catch (error) {
-    console.error('Error fetching blog posts:', error);
+    console.error('Error fetching posts:', error);
   }
 });
 
@@ -71,6 +77,10 @@ const formatDate = (dateString) => {
   return date.toLocaleDateString(undefined, {
     year: "numeric", month: "long", day: "numeric",
   });
+}
+
+const routeToBlogDetails = () => {
+  router.push("/BlogDetails");
 }
 </script>
 

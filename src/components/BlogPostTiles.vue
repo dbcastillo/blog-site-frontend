@@ -1,76 +1,97 @@
 <template>
-  <v-sheet class="pa-4"> <!--padding all around -->
-    <v-container class="mx-auto" style="max-width: 1400px;">
-      <v-row class="mb-8" no-gutters>
-        <v-col cols="12" md="8" sm="12" class="featured-image-wrapper">
-          <img
-              :src="featuredBlog[0]?.imageUrls[0]"
-              alt="featured Blog"
-              class="featured-image"
-              @click="routeToBlogDetails"
-              style="cursor: pointer"
-          />
-        </v-col>
-        <v-col
-            cols="12"
-            md="4"
-            class="d-flex flex-column justify-center align-center text-center pa-6"
-        >
-          <div>
-            <h2 class="featured-title mb-2">Featured Blog</h2>
-            <p class="featured-description">
-              {{ featuredBlog[0]?.content }}
-            </p>
-          </div>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col
-            v-for="blog in allBlogs"
-            :key="blog.id"
-            cols="12"
-            sm="6"
-            md="4"
+  <v-sheet class="bg-orange-lighten-4">
+    <v-container class="mx-auto" max-width="1400px">
+      <div v-if="!blogs.length">
+        <v-row class="mb-8" no-gutters>
+          <v-col cols="12" md="6" sm="3">
+            <v-skeleton-loader type="image" height="400px" class="rounded-lg"/>
+          </v-col>
+          <v-col cols="12" md="4" class="d-flex flex-column justify-center align-center text-center pa-6">
+            <v-skeleton-loader type="heading, paragraph" class="w-100"/>
+          </v-col>
+        </v-row>
 
-        >
-          <div class="blog-post">
-            <img
-                :src="blog.imageUrls[0]"
-                alt="image"
-                class="blog-image"
-                @click="routeToBlogDetails"
+        <v-row>
+          <v-col
+              v-for="n in 6"
+              :key="n"
+              cols="12"
+              sm="6"
+              md="4"
+          >
+            <v-skeleton-loader
+                type="image, heading, paragraph"
+                class="rounded-lg"
+                height="350px"
+            />
+          </v-col>
+        </v-row>
+      </div>
+      <div v-else>
+        <v-row class="mb-8" no-gutters>
+          <v-col cols="12" md="8" sm="12" class="overflow-hidden rounded-lg">
+            <v-img
+                :src="blogs[0].imageUrls[0]"
+                alt="featured Blog"
+                height="400"
+                cover
+                class="rounded-lg"
+                @click="routeToBlogDetails(blogs[0].id)"
                 style="cursor: pointer"
             />
-            <h2>{{ blog.title }}</h2>
-            <p>{{ formatDate(blog.createdAt) }}</p>
-          </div>
-        </v-col>
-      </v-row>
+          </v-col>
+          <v-col
+              cols="12"
+              md="4"
+              class="d-flex flex-column justify-center align-center text-center pa-6"
+          >
+            <div>
+              <h2 class="text-h5 mb-2">Featured Blog</h2>
+              <p class="text-body-1 text-truncate-4">
+                {{ blogs[0].content }}
+              </p>
+            </div>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col
+              v-for="blog in blogs.slice(1)"
+              :key="blog.id"
+              cols="12"
+              sm="6"
+              md="4"
+          >
+            <v-card class="rounded-lg">
+              <v-img
+                  :src="blog.imageUrls[0]"
+                  height="250"
+                  cover
+                  class="rounded-t-lg"
+                  @click="routeToBlogDetails(blog.id)"
+                  style="cursor: pointer"
+              />
+              <v-card-text>
+                <h2 class="text-h6">{{ blog.title }}</h2>
+                <p class="text-body-2">{{ formatDate(blog.createdAt) }}</p>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </div>
     </v-container>
   </v-sheet>
 </template>
 
+
 <script setup>
-import {getBlogposts} from "@/services/blogpostService.js";
-import {onMounted, ref} from "vue";
 import {useRouter} from 'vue-router';
 
-
-const blogposts = ref([]);
-const allBlogs = ref([])
-const featuredBlog = ref([])
 const router = useRouter()
 
-onMounted(async () => {
-  try {
-    const response = await getBlogposts();
-    blogposts.value = response.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    allBlogs.value = blogposts.value.slice(1)
-    featuredBlog.value = [blogposts.value[0]]
-  } catch (error) {
-    console.error('Error fetching posts:', error);
-  }
-});
+defineProps({
+  blogs: Array
+})
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -79,53 +100,17 @@ const formatDate = (dateString) => {
   });
 }
 
-const routeToBlogDetails = () => {
-  router.push("/BlogDetails");
+const routeToBlogDetails = (id) => {
+  router.push({name: 'BlogDetails', params: {id}});
 }
 </script>
 
 <style scoped>
-.featured-description {
+.text-truncate-4 {
   display: -webkit-box;
-  -webkit-line-clamp: 4; /* restrict to 4 lines */
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  max-height: 6em; /* fallback for some browsers */
-  line-height: 1.5em;
-  text-align: center;
-}
-
-.featured-image-wrapper {
-  height: 400px;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-}
-
-.featured-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
-  max-height: 400px;
-}
-
-.blog-image {
-  width: 100%;
-  max-width: 500px;
-  height: 250px;
-  object-fit: cover;
-  display: block;
-  margin: 2px 0;
-  border-radius: 10px;
-}
-
-.blog-post {
-  background-color: white;
-  border-radius: 10px;
 }
 </style>
 

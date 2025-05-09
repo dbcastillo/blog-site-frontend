@@ -1,9 +1,12 @@
 import {createRouter, createWebHistory} from 'vue-router';
-import BlogDetails from "@/components/BlogDetails.vue";
 import BlogPosts from "@/components/BlogPosts.vue";
 
-const routes = [{path: '/', component: BlogPosts}, {
-    path: '/BlogDetails', component: BlogDetails
+const routes = [{
+    path: '/', name: 'BlogList', component: BlogPosts
+}, {
+    path: '/blog/:id',
+    name: 'BlogDetails',
+    component: () => import('@/components/BlogDetails.vue')
 }];
 
 const router = createRouter({

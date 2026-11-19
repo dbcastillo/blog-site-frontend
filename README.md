@@ -1,29 +1,34 @@
-# blogFrontend
+# Full-Stack Blog — Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+A Vue.js frontend for a full-stack blogging
+application, integrated with a Java and
+Spring Boot backend.
 
-## Recommended IDE Setup
+## Technologies
+- Vue 3
+- Vuetify
+- JavaScript
+- Vite
+- REST APIs
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Getting Started
 
-## Customize configuration
+Install dependencies:
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+    npm install
 
-## Project Setup
+Start the development server:
 
-```sh
-npm install
-```
+    npm run dev
 
-### Compile and Hot-Reload for Development
+Build for production:
 
-```sh
-npm run dev
-```
+    npm run build
 
-### Compile and Minify for Production
+## Backend Repository
+https://github.com/dbcastillo/blog-site-backend
 
-```sh
-npm run build
-```
+## Future Improvements
+- Expand automated testing
+- Improve accessibility
+- Refine the responsive user interface

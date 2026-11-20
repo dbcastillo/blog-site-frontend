@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 
 export const getBlogposts = () => {
@@ -6,7 +7,7 @@ export const getBlogposts = () => {
             return response.data
         })
         .catch(error => {
-            console.error('Error fetching employees:', error);
+            console.error('Error fetching blog posts:', error);
             throw error;
         });
 }
